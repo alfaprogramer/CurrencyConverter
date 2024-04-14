@@ -7,7 +7,7 @@
 
 import React, { useState } from 'react';
 import type {PropsWithChildren} from 'react';
-import { SafeAreaView, StatusBar, Text, View } from 'react-native';
+import { SafeAreaView, StatusBar, Text, View, StyleSheet, TextInput, FlatList, Pressable } from 'react-native';
 
 //Constants
 import { currencyByRupee } from './constants';
@@ -44,7 +44,7 @@ function App(): React.JSX.Element {
         settargetcurrency(targetvalue.name)
       }else{
         return Snackbar.show({
-          text:"Enter a Number to convert",
+          text:"Enter a Number to convert ",
           backgroundColor:"#F4BE2C",
           textColor:"black"
         })
@@ -52,12 +52,52 @@ function App(): React.JSX.Element {
     }
 
   return (
-    <SafeAreaView>
+    <>
       <StatusBar />
-      <View>
-        <Text>1</Text>
+      <View style={styles.container}>
+        <View style={styles.topContainer}>
+          <View style={styles.rupeesContainer}>
+            <Text style={styles.rupee}>
+              ₹
+            </Text>
+            <TextInput 
+            
+            maxLength={14}
+            value={inputvalue}
+            clearButtonMode='always'
+            onChangeText={setinputvalue}
+            keyboardType='number-pad'
+            placeholder='Enter amount in Ruppes'/>
+          </View>
+          {resultvalue && (
+            <Text style={styles.resultTxt}>
+              {resultvalue}
+            </Text>
+          )}
+        </View>
+        <View style={styles.bottomContainer}>
+           <FlatList 
+             numColumns={3}
+             data={currencyByRupee}
+             keyExtractor={item => item.name}
+             renderItem={({item})=> (
+              <Pressable
+              style={[
+                styles.button,
+                targetcurrency=== item.name && styles.selected 
+
+              ]}
+
+              onPress={()=> buttpnPressed(item)}
+              >
+                <CurrencyButton {...item} />
+              </Pressable>
+             )}
+            />
+        </View>
+        
       </View>
-    </SafeAreaView>
+    </>
     
   );
 }
@@ -68,7 +108,7 @@ function App(): React.JSX.Element {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#515151',
+    backgroundColor: '#E2DFD2',
   },
   topContainer: {
     flex: 1,
